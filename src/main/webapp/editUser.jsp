@@ -33,9 +33,7 @@ System.out.println(user);
     return;
 } */
 %>
-<%
-//User user = (User) request.getAttribute("user");
-%>
+
 
 <html>
 <head>
@@ -44,15 +42,15 @@ System.out.println(user);
 <body>
 	<h1>Edit User</h1>
 	<form method="post" action="userServlet">
-		<%--   ID: <input type="text" name="id" value="<%= user.getUserId() %>" readonly><br>
-	  --%>
-		UserRole:
+		ID: <input type="text" name="userId" value="<%= user.getUserId() %>" readonly><br>
+	 
 		<%--    <select name="myList">
 <% for (String value : myValues) { %>
 <option value="<%= value %>"><%= value %></option>
 <% } %>
 </select> --%>
 
+		UserRole:
 		<select name="userRole">
 			<option value="Admin"
 				<%=user.getUserRole().equals("Admin") ? "selected" : ""%>>Admin</option>
@@ -60,16 +58,14 @@ System.out.println(user);
 				<%=user.getUserRole().equals("Manager") ? "selected" : ""%>>Manager</option>
 			<option value="Employee"
 				<%=user.getUserRole().equals("Employee") ? "selected" : ""%>>Employee</option>
-		</select><br> UserName: <input type="text" name="userName"
-			value="<%=user.getUserName()%>"><br> Email: <input
-			type="email" value="<%=user.getUserEmail()%>"><br>
-		Date of Birth: <input type="date" name="userDob"
-			value="<%=LocalDate.parse(user.getUserDob())%>"><br>
-		Date of Joining: <input type="date" name="UserJoiningDate"
-			value="<%=LocalDate.parse(user.getUserJoiningDate())%>"><br>
-		User Salary: <input type="text" name="userSalary"
-			value="<%=user.getUserSalary()%>"><br> Address: <input
-			type="text" name="userAddress" value="<%=user.getUserAddress()%>"><br>
+		</select><br> 
+		UserName: <input type="text" name="userName"
+			value="<%=user.getUserName()%>"><br> 
+		Email: <input type="email" name="userEmail" value="<%=user.getUserEmail()%>"><br>
+		Date of Birth: <input type="date" name="userDob" value="<%=LocalDate.parse(user.getUserDob())%>"><br>
+		Date of Joining: <input type="date" name="userJoiningDate" value="<%=LocalDate.parse(user.getUserJoiningDate())%>"><br>
+		User Salary: <input type="text" name="userSalary" value="<%=user.getUserSalary()%>"><br> 
+			Address: <input type="text" name="userAddress" value="<%=user.getUserAddress()%>"><br>
 		Password: <input type="password" name="userPassword"
 			value="<%=user.getUserPassword()%>"><br>
 

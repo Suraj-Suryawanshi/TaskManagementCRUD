@@ -11,16 +11,17 @@ import com.surya.model.User;
 import com.surya.util.DButil;
 
 public class UserDaoImpl implements UserDao {
-	
+
 		User user=new User();
 	   @Override
 	   public boolean addUser(User user) {
-	        
+
 		   String query = "INSERT INTO users ( userName, userPassword, userEmail, userDob, userRole, userJoiningDate, userSalary, userAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-	       System.out.println("user add----"); 
+	       System.out.println("user add----");
+
 	        try (Connection connection = DButil.getConnection();
 	            PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-	        	
+
 	        	preparedStatement.setString(1, user.getUserName());
 	        	preparedStatement.setString(2, user.getUserPassword());
 	        	preparedStatement.setString(3, user.getUserEmail());
@@ -33,23 +34,24 @@ public class UserDaoImpl implements UserDao {
 	            int rowsAffected = preparedStatement.executeUpdate();
 	            System.out.println("addUser-----------"+rowsAffected);
 	            return rowsAffected > 0;
-	        } 
+	        }
 	        catch (SQLException e) {
 	            e.printStackTrace();
 	            return false;
 	        }
+
 	    }
-	   
-	   public User getUserById(int userId) {
+	@Override
+	public User getUserById(int userId) {
 		    User user = null;
 		    String query = "SELECT * FROM users WHERE userId=?";
-		    
+
 		    try (Connection connection = DButil.getConnection();
 		         PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-		        
+		        System.out.println("UserId-------"+userId);
 		        preparedStatement.setInt(1, userId);
 		        ResultSet rs = preparedStatement.executeQuery();
-
+		        System.out.println("ResultSEt-----"+rs.toString());
 		        if (rs.next()) {
 		            int id = rs.getInt("userId");
 		            String userName = rs.getString("userName");
@@ -62,15 +64,19 @@ public class UserDaoImpl implements UserDao {
 		            String userAddress = rs.getString("userAddress");
 
 		            user = new User(id, userName, userPassword, userEmail, userDob, userRole, userJoiningDate, userSalary, userAddress);
+		            System.out.println("insideUserGet------"+user);
 		        }
 		    } catch (SQLException e) {
 		        e.printStackTrace();
 		        // Handle exception
 		    }
+		    System.out.println("-----------"+user);
 		    return user;
 		}
 
-//	   public User getUserById(int userId) {
+//	   @Override
+//	public User getUserById(int userId) {
+//		   System.out.println("daoUserId-----------"+userId);
 //	        User user = null;
 //	        String query = "select * from \"I1292\".users where id=?";
 //	        // Step 1: Establishing a Connection
@@ -81,9 +87,9 @@ public class UserDaoImpl implements UserDao {
 //	            System.out.println(preparedStatement);
 //	            // Step 3: Execute the query or update query
 //	            ResultSet rs = preparedStatement.executeQuery();
-//
+//	            System.out.println("ResultSet :: getUserById"+rs);
 //	            // Step 4: Process the ResultSet object.
-//	            
+//
 //	            	  while (rs.next()) {
 //	  	                int id = rs.getInt("userId");
 //	  	                String userName = rs.getString("userName");
@@ -94,16 +100,16 @@ public class UserDaoImpl implements UserDao {
 //	  	                String userJoiningDate =rs.getString("userJoiningDate");
 //	  	                int userSalary = rs.getInt("userSalary");
 //	   	                String userAddress = rs.getString("userAddress");
-//	  	              
+//
 //	                user = new User(id, userName, userPassword,userEmail, userDob, userRole, userJoiningDate, userSalary, userAddress );
-//	            
+//
 //	       }
 //	            } catch (SQLException e) {
 //	            	e.printStackTrace();
 //	        }
 //	        return user;
 //	    }
-	  
+
 //	   	public User getUserById(int userId) {
 //	   	 String query = "select * from \"I1292\".users where id=?";
 //	   	 User user=new User();
@@ -118,7 +124,7 @@ public class UserDaoImpl implements UserDao {
 //	            // Step 4: Process the ResultSet object.
 ////	            while (rs.next()) {
 //	            	user.setUserId(rs.getInt("userId"));
-//	            
+//
 //	                user.setUserName(rs.getString("userName"));
 //	                user.setUserAddress(rs.getString("userPassword"));
 //	                user.setUserEmail(rs.getString("userEmail"));
@@ -136,12 +142,12 @@ public class UserDaoImpl implements UserDao {
 //	        	e.printStackTrace();
 //	        }
 //	        return user;
-//	   	 
+//
 //	   	}
-	   
+
 	   @Override
 	    public List<User> selectAllUsers() {
-	    	
+		   System.out.println("selectAllUser::Call----------"+user);
 	    	String query= "select * from users";
 	        // using try-with-resources to avoid closing resources (boiler plate code)
 	        List < User > users = new ArrayList < > ();
@@ -153,7 +159,7 @@ public class UserDaoImpl implements UserDao {
 	            System.out.println(preparedStatement);
 	            // Step 3: Execute the query or update query
 	            ResultSet rs = preparedStatement.executeQuery();
-
+	            System.out.println("selectAllUsers::--------"+users);
 	            // Step 4: Process the ResultSet object.
 	            while (rs.next()) {
 	                int id = rs.getInt("userId");
@@ -166,7 +172,7 @@ public class UserDaoImpl implements UserDao {
 	                int userSalary = rs.getInt("userSalary");
  	                String userAddress = rs.getString("userAddress");
 	                users.add(new User(id, userName, userPassword, userEmail, userDob, userRole, userJoiningDate, userSalary, userAddress));
-	                System.out.println(user);
+	                System.out.println("\nselectAll::userDaoImpl-------"+user);
 	            }
 	        } catch (SQLException e) {
 //	            printSQLException(e);
@@ -174,44 +180,70 @@ public class UserDaoImpl implements UserDao {
 	        }
 	        return users;
 	    }
-	    
+
+	   public List<User> managerUserList(){
+		   String query="Select userName,userEmail from users where userRole=?";
+		   List<User> categoryList = new ArrayList<>();
+		   try(Connection connection = DButil.getConnection();
+				   PreparedStatement preparedStatement=connection.prepareStatement(query)){
+			   preparedStatement.setString(1, "Manager");
+			   ResultSet rs = preparedStatement.executeQuery();
+
+			   while(rs.next()) {
+				   String userName = rs.getString("userName");
+				   String userEmail = rs.getString("userEmail");
+				   categoryList.add(new User(userName, userEmail));
+				   System.out.println("\n listCategoryUser::userDaoImpl----"+categoryList);
+			   }
+		   } catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return categoryList;
+
+	   }
 	   @Override
 	    public boolean updateUser(User user) throws SQLException {
 	        boolean rowUpdated;
-	        String query = "update users set userName = ?, userPassword=?, userEmail= ?, userDob=?, userRole=?, userJoiningDate=?, userSalary=?, userAddress=? where userId = ?;";
+//	        int userId=user.getUserId();
+	        String query = "update users set userName = ?, userEmail= ?, userDob=?, userRole=?, userJoiningDate=?, userSalary=?, userAddress=? , userPassword=? where userId = ?;";
 	        try (Connection connection = DButil.getConnection(); PreparedStatement statement = connection.prepareStatement(query);) {
 	            statement.setString(1, user.getUserName());
-	            statement.setString(2, user.getUserPassword());
-	            statement.setString(3, user.getUserEmail());
-	            statement.setString(4, user.getUserDob());
-	            statement.setString(5, user.getUserRole());
-	            statement.setString(6, user.getUserJoiningDate());
-	            statement.setInt(7, user.getUserSalary());
-	            statement.setString(8, user.getUserAddress());
+	            statement.setString(2, user.getUserEmail());
+	            statement.setString(3, user.getUserDob());
+	            statement.setString(4, user.getUserRole());
+	            statement.setString(5, user.getUserJoiningDate());
+	            statement.setInt(6, user.getUserSalary());
+	            statement.setString(7, user.getUserAddress());
+	            statement.setString(8, user.getUserPassword());
+	            statement.setInt(9, user.getUserId());
 	            rowUpdated = statement.executeUpdate() > 0;
 	        }
 	        return rowUpdated;
 	    }
-	    
+
 	   @Override
-	    public boolean deleteUser(int id) throws SQLException {
+	    public boolean deleteUser(int userId) throws SQLException {
 	        boolean rowDeleted;
-	        String query = "delete from users where userId=?";
-	        try (Connection connection = DButil.getConnection(); 
+	        String query = "delete from \"I1292\".users where userId=?";
+	        try (Connection connection = DButil.getConnection();
 	        	PreparedStatement statement = connection.prepareStatement(query);) {
-	            statement.setInt(1, id);
+	            statement.setInt(1, userId);
 	            rowDeleted = statement.executeUpdate() > 0;
 	        }
 	        return rowDeleted;
 	    }
-	    
+
+
+
+
 	   @Override
 	    public boolean isValidUser(String userEmail,String userRole,  String userPassword) {
 		   System.out.println("servlet valid----");
 		   String query = "SELECT * FROM users WHERE  userEmail =? AND userRole=? AND userPassword = ? ";
 	    	try (Connection connection = DButil.getConnection();
 	    		PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-	    		 System.out.println("servlet valid succes----"); 
+	    		 System.out.println("servlet valid succes----");
 
 	            preparedStatement.setString(1, userEmail);
 	            preparedStatement.setString(2, userRole);
@@ -220,7 +252,7 @@ public class UserDaoImpl implements UserDao {
 	            ResultSet resultSet = preparedStatement.executeQuery();
 	            System.out.println(resultSet);
 	            return resultSet.next();
-	        } 
+	        }
 	    	catch (SQLException e) {
 	        	System.out.println("servlet exception----");
 	            e.printStackTrace();

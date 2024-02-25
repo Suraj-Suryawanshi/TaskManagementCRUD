@@ -1,8 +1,6 @@
 package com.surya.model;
-
-
 public class User {
-	
+
 	 private int userId;
 	 private String userName;
 	 private String userPassword;
@@ -66,10 +64,10 @@ public class User {
 	public void setUserAddress(String userAddress) {
 		this.userAddress = userAddress;
 	}
-	
-	
+
+
 	public User() {
-//		super();
+
 	}
 	@Override
 	public String toString() {
@@ -90,9 +88,14 @@ public class User {
 		this.userSalary = userSalary;
 		this.userAddress = userAddress;
 	}
-	
-	 
-	
-	
-	
+	public User(String userName, String userEmail) {
+		super();
+		this.userName = userName;
+		this.userEmail = userEmail;
+	}
+
+
+
+
+
 }

@@ -9,14 +9,14 @@
     <welcome-file>default.jsp</welcome-file>
     <welcome-file>default.htm</welcome-file>
   </welcome-file-list>
-  <!-- <servlet>
+  <servlet>
     <description></description>
-    <display-name>UserServlet</display-name>
-    <servlet-name>UserServlet</servlet-name>
-    <servlet-class>com.surya.controller.UserServlet</servlet-class>
+    <display-name>TaskServlet</display-name>
+    <servlet-name>TaskServlet</servlet-name>
+    <servlet-class>com.surya.controller.TaskServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>UserServlet</servlet-name>
-    <url-pattern>/UserServlet</url-pattern>
-  </servlet-mapping> -->
+    <servlet-name>TaskServlet</servlet-name>
+    <url-pattern>/TaskServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
